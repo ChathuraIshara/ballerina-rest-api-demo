@@ -1,0 +1,4 @@
+[package]
+org = "chathura"
+name = "book_rest_api"
+version = "0.1.0"
