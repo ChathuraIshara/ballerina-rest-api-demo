@@ -22,6 +22,15 @@ listener http:Listener bookListener = new (9090);
 // In-memory table to store books
 table<Book> key(id) booksTable = table [];
 
+// Helper function to get a book by ID
+function getBookById(string id) returns Book|NotFoundIdError {
+    Book? book = booksTable[id];
+    if book is Book {
+        return book;
+    }
+    return { body: "Id not found. Provided: " + id };
+}
+
 service /book on bookListener {
 
     resource function get .() returns Book[] {
@@ -29,11 +38,7 @@ service /book on bookListener {
     }
 
     resource function get [string id]() returns Book|NotFoundIdError {
-        Book? book = booksTable[id];
-        if book is Book {
-            return book;
-        }
-        return { body: "Id not found. Provided: " + id };
+        return getBookById(id);
     }
 
     resource function post .(BookRequest bookRequest) returns string {
